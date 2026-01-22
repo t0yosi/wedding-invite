@@ -28,10 +28,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Protect admin API routes - require Bearer token
-  if (
-    pathname.startsWith('/api/') &&
-    pathname !== '/api/guests' // This pattern already checked above
-  ) {
+  if (pathname.startsWith('/api/')) {
     const authHeader = request.headers.get('authorization');
     const adminPassword = process.env.ADMIN_PASSWORD;
 
