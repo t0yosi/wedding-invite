@@ -5,9 +5,10 @@ import { Guest } from '@/lib/db';
 interface AdminGuestListProps {
   guests: Guest[];
   onDelete?: (id: number) => void;
+  onNotify?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
-export default function AdminGuestList({ guests, onDelete }: AdminGuestListProps) {
+export default function AdminGuestList({ guests, onDelete, onNotify }: AdminGuestListProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'attending':
@@ -25,7 +26,7 @@ export default function AdminGuestList({ guests, onDelete }: AdminGuestListProps
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert('Link copied to clipboard!');
+    onNotify?.('Link copied to clipboard!', 'success');
   };
 
   return (

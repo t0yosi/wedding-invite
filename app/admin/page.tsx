@@ -1,8 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Guest } from '@/lib/db';
 import AdminGuestList from '@/components/AdminGuestList';
+import Toast from '@/components/Toast';
+
+interface ToastState {
+  id: string;
+  message: string;
+  type: 'success' | 'error' | 'info';
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
@@ -11,6 +22,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [toast, setToast] = useState<ToastState | null>(null);
 
   const [newGuest, setNewGuest] = useState({
     name: '',
@@ -22,6 +34,10 @@ export default function AdminPage() {
   const [checkInCode, setCheckInCode] = useState('');
   const [checkInResult, setCheckInResult] = useState<{ success: boolean; message: string; guest?: Guest } | null>(null);
   const [checkInLoading, setCheckInLoading] = useState(false);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success', action?: ToastState['action']) => {
+    setToast({ id: Date.now().toString(), message, type, action });
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +107,13 @@ export default function AdminPage() {
       }
 
       const data = await response.json();
-      alert(`Guest added! Invitation link:\n${data.inviteUrl}`);
+      showToast(`Guest "${newGuest.name}" added!`, 'success', {
+        label: 'Copy Link',
+        onClick: () => {
+          navigator.clipboard.writeText(data.inviteUrl);
+          showToast('Invitation link copied!', 'success');
+        },
+      });
 
       setNewGuest({
         name: '',
@@ -349,10 +371,19 @@ export default function AdminPage() {
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mx-auto"></div>
             </div>
           ) : (
-            <AdminGuestList guests={guests} />
+            <AdminGuestList guests={guests} onNotify={showToast} />
           )}
         </div>
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          action={toast.action}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }
