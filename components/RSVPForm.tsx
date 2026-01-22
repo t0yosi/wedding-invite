@@ -21,6 +21,7 @@ export default function RSVPForm({ guest, onSuccess }: RSVPFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [accessCode, setAccessCode] = useState<string | null>(guest.access_code || null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,10 +54,15 @@ export default function RSVPForm({ guest, onSuccess }: RSVPFormProps) {
         throw new Error('Failed to submit RSVP');
       }
 
+      const data = await response.json();
+      if (data.guest?.access_code) {
+        setAccessCode(data.guest.access_code);
+      }
+
       setSuccess(true);
       setTimeout(() => {
         onSuccess();
-      }, 2000);
+      }, 5000);
     } catch (err) {
       setError('Failed to submit RSVP. Please try again.');
     } finally {
@@ -70,6 +76,18 @@ export default function RSVPForm({ guest, onSuccess }: RSVPFormProps) {
         <div className="text-6xl mb-4">✓</div>
         <h3 className="text-2xl font-serif mb-2">Thank You!</h3>
         <p className="text-gray-600">Your RSVP has been received.</p>
+
+        {accessCode && formData.rsvp_status === 'attending' && (
+          <div className="mt-6 p-6 bg-green-50 border-2 border-green-300 rounded-lg">
+            <p className="text-sm text-green-700 mb-2">Your Check-in Access Code:</p>
+            <p className="text-4xl font-mono font-bold text-green-800 tracking-wider my-4">
+              {accessCode}
+            </p>
+            <p className="text-sm text-green-600">
+              Screenshot this code! Present it at the venue for check-in.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
