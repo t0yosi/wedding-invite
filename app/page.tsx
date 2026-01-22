@@ -7,15 +7,19 @@ export default function Home() {
         {/* Main Content */}
         <div className="space-y-6">
           <div className="text-primary text-8xl mb-8 animate-pulse">💍</div>
-          <h1 className="text-6xl md:text-7xl font-serif text-primary mb-4">
-            Sarah & Michael
+          <p className="text-xl text-gray-600 tracking-widest">TLC2026</p>
+          <h1 className="text-5xl md:text-7xl font-serif text-primary mb-4">
+            Chiamaka Lilian
           </h1>
           <p className="text-2xl md:text-3xl text-gray-700 font-light">
-            are getting married
+            &
           </p>
+          <h1 className="text-5xl md:text-7xl font-serif text-primary mb-4">
+            Tosin Richard
+          </h1>
           <div className="text-xl text-gray-600 space-y-2 pt-4">
-            <p className="font-medium">Saturday, June 15, 2024</p>
-            <p>The Grand Ballroom, New York</p>
+            <p className="font-medium">Saturday, April 18th, 2026</p>
+            <p>Christ the King Catholic Church, GRA, Enugu</p>
           </div>
         </div>
 
@@ -35,12 +39,7 @@ export default function Home() {
 
         {/* Footer */}
         <div className="text-sm text-gray-500 space-y-2 pt-8">
-          <p>For questions or assistance, please contact:</p>
-          <p>
-            <a href="mailto:wedding@example.com" className="text-primary hover:underline">
-              wedding@example.com
-            </a>
-          </p>
+          <p>We look forward to celebrating with you!</p>
         </div>
       </div>
     </div>

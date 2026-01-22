@@ -3,29 +3,29 @@
 export default function EventSchedule() {
   const events = [
     {
-      time: '3:00 PM',
+      time: '9:30 AM',
       title: 'Guest Arrival',
-      description: 'Welcome drinks and light refreshments',
+      description: 'Arrive at Christ the King Catholic Church, GRA, Enugu',
     },
     {
-      time: '4:00 PM',
-      title: 'Ceremony Begins',
-      description: 'Main wedding ceremony',
+      time: '10:00 AM',
+      title: 'Holy Mass',
+      description: 'Wedding Mass and Exchange of Vows',
     },
     {
-      time: '5:30 PM',
-      title: 'Cocktail Hour',
-      description: 'Mingle and enjoy appetizers',
+      time: '12:00 PM',
+      title: 'Photo Session',
+      description: 'Family and friends photos at the church',
     },
     {
-      time: '6:30 PM',
+      time: '1:00 PM',
       title: 'Reception',
-      description: 'Dinner, toasts, and dancing',
+      description: 'Celebration at Hotel Sylvia, Independence Layout',
     },
     {
-      time: '10:00 PM',
-      title: 'Send-off',
-      description: 'Sparkler exit',
+      time: '6:00 PM',
+      title: 'After Party',
+      description: 'Dance, celebrate, and make memories!',
     },
   ];
 

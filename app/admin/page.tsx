@@ -19,6 +19,10 @@ export default function AdminPage() {
     plus_one_allowed: false,
   });
 
+  const [checkInCode, setCheckInCode] = useState('');
+  const [checkInResult, setCheckInResult] = useState<{ success: boolean; message: string; guest?: Guest } | null>(null);
+  const [checkInLoading, setCheckInLoading] = useState(false);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password) {
@@ -105,6 +109,38 @@ export default function AdminPage() {
     }
   };
 
+  const handleCheckIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCheckInLoading(true);
+    setCheckInResult(null);
+
+    try {
+      const response = await fetch('/api/checkin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${password}`,
+        },
+        body: JSON.stringify({ access_code: checkInCode.toUpperCase() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setCheckInResult({ success: false, message: data.error || 'Check-in failed' });
+      } else {
+        setCheckInResult({ success: true, message: data.message, guest: data.guest });
+        setCheckInCode('');
+        fetchGuests();
+        fetchStats();
+      }
+    } catch (err) {
+      setCheckInResult({ success: false, message: 'Check-in failed. Please try again.' });
+    } finally {
+      setCheckInLoading(false);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -149,7 +185,7 @@ export default function AdminPage() {
 
         {/* Stats */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <div className="card text-center">
               <div className="text-3xl font-bold text-primary">
                 {stats.total_guests}
@@ -180,8 +216,57 @@ export default function AdminPage() {
               </div>
               <div className="text-sm text-gray-600 mt-1">Plus Ones</div>
             </div>
+            <div className="card text-center">
+              <div className="text-3xl font-bold text-purple-600">
+                {stats.checked_in || 0}
+              </div>
+              <div className="text-sm text-gray-600 mt-1">Checked In</div>
+            </div>
           </div>
         )}
+
+        {/* Check-in Section */}
+        <div className="card bg-gradient-to-r from-purple-50 to-pink-50">
+          <h2 className="text-2xl font-serif mb-4">Guest Check-in</h2>
+          <form onSubmit={handleCheckIn} className="flex flex-col md:flex-row gap-4">
+            <div className="flex-grow">
+              <input
+                type="text"
+                value={checkInCode}
+                onChange={(e) => setCheckInCode(e.target.value.toUpperCase())}
+                placeholder="Enter 6-digit access code"
+                className="input-field text-2xl text-center tracking-widest font-mono uppercase"
+                maxLength={6}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn-primary px-8"
+              disabled={checkInLoading || checkInCode.length !== 6}
+            >
+              {checkInLoading ? 'Checking...' : 'Check In'}
+            </button>
+          </form>
+          {checkInResult && (
+            <div
+              className={`mt-4 p-4 rounded-lg ${
+                checkInResult.success
+                  ? 'bg-green-100 border-2 border-green-300 text-green-800'
+                  : 'bg-red-100 border-2 border-red-300 text-red-800'
+              }`}
+            >
+              <p className="font-medium text-lg">{checkInResult.message}</p>
+              {checkInResult.guest && (
+                <p className="text-sm mt-1">
+                  {checkInResult.guest.plus_one_attending
+                    ? `With plus one: ${checkInResult.guest.plus_one_name}`
+                    : 'No plus one'}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Add Guest Form */}
         <div className="card">

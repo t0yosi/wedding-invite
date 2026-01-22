@@ -49,6 +49,12 @@ export default function AdminGuestList({ guests, onDelete }: AdminGuestListProps
               Meal
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Access Code
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Check-in
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Actions
             </th>
           </tr>
@@ -96,6 +102,26 @@ export default function AdminGuestList({ guests, onDelete }: AdminGuestListProps
                   <div className="text-xs text-gray-500">
                     + {guest.plus_one_meal_preference}
                   </div>
+                )}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {guest.access_code ? (
+                  <span className="font-mono text-sm font-bold tracking-wider text-purple-700 bg-purple-100 px-2 py-1 rounded">
+                    {guest.access_code}
+                  </span>
+                ) : (
+                  <span className="text-gray-400 text-sm">-</span>
+                )}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {guest.checked_in ? (
+                  <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                    Checked In
+                  </span>
+                ) : guest.rsvp_status === 'attending' ? (
+                  <span className="text-gray-400 text-sm">Not yet</span>
+                ) : (
+                  <span className="text-gray-300 text-sm">-</span>
                 )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
